@@ -31,12 +31,44 @@ docker run -p 3000:3000 mailvoid
 ## API Endpoints
 
 - `POST /api/generate`: Generate a new email address. Body: `{ "duration": "10min" | "unlimited" }`
-- `PUT /api/endpoint`: Receive an email. Body: `{ "to": "email", "from": "sender", "subject": "subj", "text": "body" }`
+- `PUT /api/endpoint`: Receive an email from Cloudflare Email Worker. Expects `ForwardableEmailMessage` format with `from`, `to`, and `raw` fields.
 - `POST /api/emails`: Get received emails for an address. Body: `{ "email": "address" }`
 
 ## Cloudflare Email Worker
 
-Configure your Cloudflare Email Worker to send PUT requests to `https://yourdomain.com/api/endpoint` with the email data in JSON format.
+The `email-worker.js` file contains the Cloudflare Email Worker code that forwards incoming emails to the MailVoid API.
+
+### Deployment Steps:
+
+1. **Install Wrangler CLI** (if not already installed):
+   ```
+   npm install -g wrangler
+   ```
+
+2. **Login to Cloudflare**:
+   ```
+   wrangler auth login
+   ```
+
+3. **Create a new Email Worker**:
+   ```
+   wrangler init mailvoid-worker --type email
+   ```
+   Or deploy directly:
+   ```
+   wrangler deploy email-worker.js
+   ```
+
+4. **Configure Email Routing**:
+   - Go to Cloudflare Dashboard > Email > Email Routing
+   - Set up routing rules to direct emails to your worker
+   - Ensure MX records point to Cloudflare
+
+5. **Update the worker URL**:
+   - Edit `email-worker.js` and replace `'https://yourdomain.com/api/endpoint'` with your actual deployed API URL (e.g., `'https://mailvoid.win/api/endpoint'`)
+
+### Worker Code Overview:
+The worker receives the `ForwardableEmailMessage` from Cloudflare and forwards it as a PUT request to the MailVoid API, including the raw email content for proper parsing.
 
 ## Domain
 
