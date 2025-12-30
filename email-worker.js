@@ -26,11 +26,11 @@ export default {
         console.log('Email forwarded successfully');
       } else {
         const responseText = await response.text();
-        console.error('Failed to forward email:', response.status, response.statusText);
-        console.error('Response body:', responseText.substring(0, 500)); // Log first 500 chars of response
+        console.log('Failed to forward email:', response.status, response.statusText);
+        console.log('Response body:', responseText.substring(0, 500)); // Log first 500 chars of response
       }
     } catch (error) {
-      console.error('Error forwarding email:', error);
+      console.log('Error forwarding email:', error);
     }
   }
 };
