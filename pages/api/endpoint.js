@@ -58,6 +58,9 @@ export default async function handler(req, res) {
       text = lines.slice(bodyStart).join('\n').trim();
     }
 
+    console.log('bodyStart:', bodyStart);
+    console.log('text preview:', text.substring(0, 100));
+
     console.log('Parsed subject:', subject);
     console.log('Parsed text length:', text.length);
 
