@@ -22,12 +22,12 @@ export default async function handler(req, res) {
 
     let processed = false;
     for (const addr of toAddresses) {
-      if (emailStore.has(addr)) {
-        const entry = emailStore.get(addr);
-        if (entry.expiration && Date.now() > entry.expiration) {
-          emailStore.delete(addr);
-          continue;
+      if (addr.endsWith('@mailvoid.win')) {
+        // For testing, accept any @mailvoid.win email
+        if (!emailStore.has(addr)) {
+          emailStore.set(addr, { expiration: null, emails: [] });
         }
+        const entry = emailStore.get(addr);
         entry.emails.push({ from, subject, text, receivedAt: new Date() });
         processed = true;
       }
