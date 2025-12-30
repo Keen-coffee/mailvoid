@@ -38,10 +38,28 @@ export default async function handler(req, res) {
     console.log('From:', from);
     console.log('To:', to);
 
-    // For now, store the raw email content directly
-    // TODO: Add proper MIME parsing later
-    const subject = 'Email Received';
-    const text = raw.substring(0, 1000); // Limit to 1000 chars to prevent issues
+    // Parse the raw email to extract subject and body
+    const lines = raw.split('\n');
+    let subject = 'No Subject';
+    let bodyStart = -1;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (line.toLowerCase().startsWith('subject:')) {
+        subject = line.substring(8).trim();
+      }
+      if (line === '' && bodyStart === -1) {
+        bodyStart = i + 1;
+      }
+    }
+
+    let text = 'No Content';
+    if (bodyStart > 0) {
+      text = lines.slice(bodyStart).join('\n').trim();
+    }
+
+    // Limit text to 1000 chars
+    text = text.substring(0, 1000);
 
     // to might be array or string
     const toAddresses = Array.isArray(to) ? to : [to];
