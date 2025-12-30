@@ -1,5 +1,4 @@
 const emailStore = require('../../store');
-const { simpleParser } = require('mailparser');
 
 export const config = {
   api: {
@@ -39,10 +38,25 @@ export default async function handler(req, res) {
     console.log('From:', from);
     console.log('To:', to);
 
-    // Parse the raw email
-    const parsed = await simpleParser(raw);
-    const subject = parsed.subject || 'No Subject';
-    const text = parsed.text || parsed.html || 'No Content';
+    // Parse the raw email to extract subject and body
+    const lines = raw.split('\n');
+    let subject = 'No Subject';
+    let bodyStart = -1;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (line.toLowerCase().startsWith('subject:')) {
+        subject = line.substring(8).trim();
+      }
+      if (line === '' && bodyStart === -1) {
+        bodyStart = i + 1;
+      }
+    }
+
+    let text = 'No Content';
+    if (bodyStart > 0) {
+      text = lines.slice(bodyStart).join('\n').trim();
+    }
 
     console.log('Parsed subject:', subject);
     console.log('Parsed text length:', text.length);
