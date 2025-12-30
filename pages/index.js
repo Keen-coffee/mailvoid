@@ -6,14 +6,23 @@ export default function Home() {
   const [emails, setEmails] = useState([]);
 
   const generateEmail = async () => {
-    const res = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ duration })
-    });
-    const data = await res.json();
-    setEmail(data.email);
-    setEmails([]);
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ duration })
+      });
+      const data = await res.json();
+      if (data.email) {
+        setEmail(data.email);
+        setEmails([]);
+      } else {
+        alert(data.error || 'Failed to generate email');
+      }
+    } catch (error) {
+      console.error('Error generating email:', error);
+      alert('Error generating email: ' + error.message);
+    }
   };
 
   const checkEmails = async () => {

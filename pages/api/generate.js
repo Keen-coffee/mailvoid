@@ -1,5 +1,12 @@
 const emailStore = require('../../store');
-const words = require('./words.json');
+
+const words = [
+  "apple", "banana", "cherry", "grape", "lemon", "orange", "peach", "pear", "plum", "berry",
+  "mango", "kiwi", "melon", "papaya", "fig", "date", "olive", "coconut", "pineapple", "strawberry",
+  "blueberry", "raspberry", "blackberry", "cranberry", "watermelon", "cantaloupe", "honeydew", "apricot", "nectarine", "persimmon",
+  "carrot", "potato", "tomato", "onion", "garlic", "pepper", "lettuce", "spinach", "broccoli", "cauliflower",
+  "cucumber", "zucchini", "eggplant", "pumpkin", "squash", "corn", "wheat", "rice", "oat", "barley"
+];
 
 function randomWord() {
   return words[Math.floor(Math.random() * words.length)];
