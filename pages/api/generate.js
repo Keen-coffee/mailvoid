@@ -1,8 +1,5 @@
 const emailStore = require('../../store');
-const fs = require('fs');
-const path = require('path');
-
-const words = JSON.parse(fs.readFileSync(path.join(__dirname, 'words.json'), 'utf8'));
+const words = require('./words.json');
 
 function randomWord() {
   return words[Math.floor(Math.random() * words.length)];
