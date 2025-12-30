@@ -18,16 +18,21 @@ export default function Home() {
 
   const checkEmails = async () => {
     if (!email) return;
-    const res = await fetch('/api/emails', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
-    const data = await res.json();
-    if (data.emails) {
-      setEmails(data.emails);
-    } else {
-      alert(data.error);
+    try {
+      const res = await fetch('/api/emails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      if (data.emails) {
+        setEmails(data.emails);
+      } else {
+        alert(data.error || 'Failed to fetch emails');
+      }
+    } catch (error) {
+      console.error('Error fetching emails:', error);
+      alert('Error fetching emails: ' + error.message);
     }
   };
 
@@ -49,7 +54,7 @@ export default function Home() {
               <li key={i}>
                 <strong>From:</strong> {e.from}<br />
                 <strong>Subject:</strong> {e.subject}<br />
-                <strong>Body:</strong> {e.text}
+                <strong>Body:</strong> {e.text.length > 500 ? e.text.substring(0, 500) + '...' : e.text}
               </li>
             ))}
           </ul>
