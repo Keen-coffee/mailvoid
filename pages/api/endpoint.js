@@ -1,16 +1,32 @@
 const emailStore = require('../../store');
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'PUT') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { from, to, raw } = req.body;
+    // Get raw email body
+    const raw = await new Promise((resolve, reject) => {
+      let data = '';
+      req.on('data', chunk => data += chunk.toString());
+      req.on('end', () => resolve(data));
+      req.on('error', reject);
+    });
 
     if (!raw) {
       return res.status(400).json({ error: 'Missing raw email content' });
     }
+
+    // Get metadata from headers
+    const from = req.headers['x-from'];
+    const to = JSON.parse(req.headers['x-to'] || '[]');
 
     // For now, store the raw email content directly
     // TODO: Add proper MIME parsing later
