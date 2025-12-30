@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailVoid - Temporary Email Generator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>MailVoid</h1>
+      <p class="subtitle">Generate temporary email addresses instantly</p>
+    </header>
+
+    <main class="main-content">
+      <!-- Generate Email Section -->
+      <section class="section generate-section">
+        <h2>Generate Temporary Email</h2>
+        
+        <div class="form-group">
+          <label for="personalEmail">Your Personal Email Address:</label>
+          <input 
+            type="email" 
+            id="personalEmail" 
+            placeholder="your@email.com"
+            class="input-field"
+            required
+          >
+          <small class="helper-text">Enter your real email address to start generating temporary emails</small>
+        </div>
+
+        <button id="generateBtn" class="btn btn-primary" disabled>
+          Generate Temporary Email
+        </button>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+      </section>
+
+      <!-- Generated Email Display -->
+      <section id="generatedSection" class="section generated-section hidden">
+        <h2>Your Temporary Email</h2>
+        
+        <div class="email-display">
+          <div class="email-label">Temporary Email Address:</div>
+          <div class="email-value" id="tempEmailDisplay"></div>
+          <button id="copyBtn" class="btn btn-secondary">Copy to Clipboard</button>
+        </div>
+
+        <div class="expiry-info">
+          <p>Expires in: <span id="expiryTimer"></span></p>
+          <div id="expiryBar" class="expiry-bar">
+            <div id="expiryProgress" class="expiry-progress"></div>
+          </div>
+        </div>
+
+        <button id="newEmailBtn" class="btn btn-secondary">Generate Another Email</button>
+      </section>
+
+      <!-- Lookup Section -->
+      <section class="section lookup-section">
+        <h2>Look Up Email Addresses</h2>
+        
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="lookup-personal">By Personal Email</button>
+          <button class="tab-btn" data-tab="lookup-temp">By Temporary Email</button>
+        </div>
+
+        <!-- Lookup by Personal Email -->
+        <div id="lookup-personal" class="tab-content active">
+          <div class="form-group">
+            <label for="lookupPersonal">Personal Email:</label>
+            <input 
+              type="email" 
+              id="lookupPersonal" 
+              placeholder="your@email.com"
+              class="input-field"
+            >
+          </div>
+          <button id="lookupPersonalBtn" class="btn btn-secondary">Find Temporary Emails</button>
+          <div id="personalLookupResults" class="lookup-results"></div>
+        </div>
+
+        <!-- Lookup by Temporary Email -->
+        <div id="lookup-temp" class="tab-content">
+          <div class="form-group">
+            <label for="lookupTemp">Temporary Email:</label>
+            <input 
+              type="email" 
+              id="lookupTemp" 
+              placeholder="adjective.noun1234@mailvoid.win"
+              class="input-field"
+            >
+          </div>
+          <button id="lookupTempBtn" class="btn btn-secondary">Find Personal Email</button>
+          <div id="tempLookupResults" class="lookup-results"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2025 MailVoid. All temporary emails are automatically deleted after 30 minutes.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

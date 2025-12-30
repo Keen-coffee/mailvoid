@@ -1,0 +1,18 @@
+{
+  "name": "mailvoid",
+  "version": "1.0.0",
+  "description": "Temporary email address generator",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "keywords": ["email", "temporary", "mailvoid"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2"
+  }
+}
