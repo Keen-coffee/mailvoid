@@ -1,4 +1,5 @@
 const emailStore = require('../../store');
+const { simpleParser } = require('mailparser');
 
 export const config = {
   api: {
@@ -38,28 +39,13 @@ export default async function handler(req, res) {
     console.log('From:', from);
     console.log('To:', to);
 
-    // Parse the raw email to extract subject and body
-    const lines = raw.split('\n');
-    let subject = 'No Subject';
-    let bodyStart = -1;
+    // Parse the raw email
+    const parsed = await simpleParser(raw);
+    const subject = parsed.subject || 'No Subject';
+    const text = parsed.text || parsed.html || 'No Content';
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      if (line.toLowerCase().startsWith('subject:')) {
-        subject = line.substring(8).trim();
-      }
-      if (line === '' && bodyStart === -1) {
-        bodyStart = i + 1;
-      }
-    }
-
-    let text = 'No Content';
-    if (bodyStart > 0) {
-      text = lines.slice(bodyStart).join('\n').trim();
-    }
-
-    // Limit text to 1000 chars
-    text = text.substring(0, 1000);
+    console.log('Parsed subject:', subject);
+    console.log('Parsed text length:', text.length);
 
     // to might be array or string
     const toAddresses = Array.isArray(to) ? to : [to];
@@ -73,7 +59,7 @@ export default async function handler(req, res) {
           emailStore.set(addr, { expiration: null, emails: [] });
         }
         const entry = emailStore.get(addr);
-        entry.emails.push({ from, subject, text, receivedAt: new Date() });
+        entry.emails.push({ from, subject, text: text, receivedAt: new Date() });
         processed = true;
       }
     }
