@@ -67,58 +67,60 @@ function initializeAuth() {
 
 // ==================== EVENT LISTENERS ====================
 
-// Auth Events
-loginBtn.addEventListener('click', handleLogin);
-authCodeInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') handleLogin();
-});
-logoutBtn.addEventListener('click', handleLogout);
-
-// Email Generation Events
-personalEmailInput.addEventListener('input', validateEmail);
-generateBtn.addEventListener('click', generateEmail);
-manualBtn.addEventListener('click', () => {
-  clearManualError();
-  manualModal.style.display = 'flex';
-});
-
-// Manual Email Modal Events
-closeManualModal.addEventListener('click', closeManualEmailModal);
-cancelManualBtn.addEventListener('click', closeManualEmailModal);
-manualModal.addEventListener('click', (e) => {
-  if (e.target === manualModal) closeManualEmailModal();
-});
-createManualBtn.addEventListener('click', createManualEmail);
-customEmailInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') createManualEmail();
-});
-
-// Generated Email Events
-copyBtn.addEventListener('click', copyToClipboard);
-newEmailBtn.addEventListener('click', resetForm);
-
-// Active Emails Events
-refreshActiveBtn.addEventListener('click', loadActiveEmails);
-
-// Tab Switching Events
-tabBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const tabName = btn.getAttribute('data-tab');
-    switchTab(tabName);
+function attachEventListeners() {
+  // Auth Events
+  loginBtn.addEventListener('click', handleLogin);
+  authCodeInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleLogin();
   });
-});
+  logoutBtn.addEventListener('click', handleLogout);
 
-// Lookup Events
-lookupPersonalBtn.addEventListener('click', lookupByPersonalEmail);
-lookupTempBtn.addEventListener('click', lookupByTempEmail);
+  // Email Generation Events
+  personalEmailInput.addEventListener('input', validateEmail);
+  generateBtn.addEventListener('click', generateEmail);
+  manualBtn.addEventListener('click', () => {
+    clearManualError();
+    manualModal.style.display = 'flex';
+  });
 
-lookupPersonalInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') lookupByPersonalEmail();
-});
+  // Manual Email Modal Events
+  closeManualModal.addEventListener('click', closeManualEmailModal);
+  cancelManualBtn.addEventListener('click', closeManualEmailModal);
+  manualModal.addEventListener('click', (e) => {
+    if (e.target === manualModal) closeManualEmailModal();
+  });
+  createManualBtn.addEventListener('click', createManualEmail);
+  customEmailInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') createManualEmail();
+  });
 
-lookupTempInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') lookupByTempEmail();
-});
+  // Generated Email Events
+  copyBtn.addEventListener('click', copyToClipboard);
+  newEmailBtn.addEventListener('click', resetForm);
+
+  // Active Emails Events
+  refreshActiveBtn.addEventListener('click', loadActiveEmails);
+
+  // Tab Switching Events
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabName = btn.getAttribute('data-tab');
+      switchTab(tabName);
+    });
+  });
+
+  // Lookup Events
+  lookupPersonalBtn.addEventListener('click', lookupByPersonalEmail);
+  lookupTempBtn.addEventListener('click', lookupByTempEmail);
+
+  lookupPersonalInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') lookupByPersonalEmail();
+  });
+
+  lookupTempInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') lookupByTempEmail();
+  });
+}
 
 // ==================== AUTHENTICATION ====================
 
@@ -614,6 +616,8 @@ function escapeHtml(text) {
 // ==================== INITIALIZATION ON LOAD ====================
 
 window.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM Content Loaded - attaching event listeners');
+  attachEventListeners();
   initializeAuth();
 
   // Auto-refresh active emails every 10 seconds
