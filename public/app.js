@@ -90,7 +90,6 @@ function attachEventListeners() {
   logoutBtn.addEventListener('click', handleLogout);
 
   // Email Generation Events
-  personalEmailInput.addEventListener('input', validateEmail);
   generateBtn.addEventListener('click', generateEmail);
   manualBtn.addEventListener('click', () => {
     clearManualError();
@@ -168,7 +167,6 @@ async function handleLogout() {
   localStorage.removeItem(STORAGE_KEY);
 
   authCodeInput.value = '';
-  personalEmailInput.value = '';
   generatedSection.classList.add('hidden');
   if (expiryInterval) clearInterval(expiryInterval);
 
@@ -180,7 +178,6 @@ async function handleLogout() {
 function showMainApp() {
   loginModal.style.display = 'none';
   mainContainer.style.display = 'flex';
-  validateEmail();
   loadActiveEmails();
 }
 
