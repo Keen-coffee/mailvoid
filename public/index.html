@@ -7,9 +7,41 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content login-modal">
+      <div class="login-header">
+        <h1>MailVoid</h1>
+        <p class="subtitle">Temporary Email Generator</p>
+      </div>
+      
+      <div class="login-form">
+        <p class="login-instruction">Enter your 8-digit authentication code to continue</p>
+        
+        <input 
+          type="password" 
+          id="authCode" 
+          placeholder="• • • • • • • •"
+          class="input-field auth-input"
+          maxlength="8"
+          inputmode="numeric"
+        >
+        
+        <div id="loginError" class="error-message"></div>
+        
+        <button id="loginBtn" class="btn btn-primary">
+          Login
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" id="mainContainer" style="display: none;">
     <header class="header">
-      <h1>MailVoid</h1>
+      <div class="header-top">
+        <h1>MailVoid</h1>
+        <button id="logoutBtn" class="btn btn-logout">Logout</button>
+      </div>
       <p class="subtitle">Generate temporary email addresses instantly</p>
     </header>
 
@@ -27,16 +59,49 @@
             class="input-field"
             required
           >
-          <small class="helper-text">Enter your real email address to start generating temporary emails</small>
+          <small class="helper-text">We'll forward emails from your temp addresses here</small>
         </div>
 
-        <button id="generateBtn" class="btn btn-primary" disabled>
-          Generate Temporary Email
-        </button>
+        <div class="button-group">
+          <button id="generateBtn" class="btn btn-primary" disabled>
+            Generate Random Email
+          </button>
+          <button id="manualBtn" class="btn btn-secondary" disabled>
+            Create Custom Email
+          </button>
+        </div>
 
         <div id="errorMessage" class="error-message"></div>
         <div id="successMessage" class="success-message"></div>
       </section>
+
+      <!-- Manual Email Creation Modal -->
+      <div id="manualModal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Create Custom Temporary Email</h2>
+            <button class="close-btn" id="closeManualModal">&times;</button>
+          </div>
+          
+          <div class="form-group">
+            <label for="customEmail">Email Address:</label>
+            <input 
+              type="email" 
+              id="customEmail" 
+              placeholder="myemail@mailvoid.win"
+              class="input-field"
+            >
+            <small class="helper-text">Must end with @mailvoid.win</small>
+          </div>
+
+          <div id="manualError" class="error-message"></div>
+          
+          <div class="modal-buttons">
+            <button id="createManualBtn" class="btn btn-primary">Create Email</button>
+            <button id="cancelManualBtn" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
 
       <!-- Generated Email Display -->
       <section id="generatedSection" class="section generated-section hidden">
@@ -56,6 +121,19 @@
         </div>
 
         <button id="newEmailBtn" class="btn btn-secondary">Generate Another Email</button>
+      </section>
+
+      <!-- Active Emails Section -->
+      <section class="section active-section">
+        <h2>Active Temporary Emails</h2>
+        
+        <button id="refreshActiveBtn" class="btn btn-secondary" style="margin-bottom: 20px;">
+          Refresh List
+        </button>
+        
+        <div id="activeEmailsList" class="active-emails-list">
+          <div class="loading">No active temporary emails. Generate one to get started!</div>
+        </div>
       </section>
 
       <!-- Lookup Section -->
