@@ -2,57 +2,94 @@
 const API_BASE = '/api';
 const STORAGE_KEY = 'mailvoid_token';
 
-// DOM Elements - Login
-const loginModal = document.getElementById('loginModal');
-const authCodeInput = document.getElementById('authCode');
-const loginBtn = document.getElementById('loginBtn');
-const loginError = document.getElementById('loginError');
-const mainContainer = document.getElementById('mainContainer');
-const logoutBtn = document.getElementById('logoutBtn');
-
-// DOM Elements - General
-const personalEmailInput = document.getElementById('personalEmail');
-const generateBtn = document.getElementById('generateBtn');
-const manualBtn = document.getElementById('manualBtn');
-const errorMessage = document.getElementById('errorMessage');
-const successMessage = document.getElementById('successMessage');
-const generatedSection = document.getElementById('generatedSection');
-const tempEmailDisplay = document.getElementById('tempEmailDisplay');
-const copyBtn = document.getElementById('copyBtn');
-const newEmailBtn = document.getElementById('newEmailBtn');
-const expiryTimer = document.getElementById('expiryTimer');
-const expiryProgress = document.getElementById('expiryProgress');
-
-// DOM Elements - Manual Email Modal
-const manualModal = document.getElementById('manualModal');
-const customEmailInput = document.getElementById('customEmail');
-const createManualBtn = document.getElementById('createManualBtn');
-const cancelManualBtn = document.getElementById('cancelManualBtn');
-const closeManualModal = document.getElementById('closeManualModal');
-const manualError = document.getElementById('manualError');
-
-// DOM Elements - Active Emails
-const refreshActiveBtn = document.getElementById('refreshActiveBtn');
-const activeEmailsList = document.getElementById('activeEmailsList');
-
-// Tab elements
-const tabBtns = document.querySelectorAll('.tab-btn');
-const tabContents = document.querySelectorAll('.tab-content');
-
-// Lookup elements
-const lookupPersonalInput = document.getElementById('lookupPersonal');
-const lookupPersonalBtn = document.getElementById('lookupPersonalBtn');
-const personalLookupResults = document.getElementById('personalLookupResults');
-
-const lookupTempInput = document.getElementById('lookupTemp');
-const lookupTempBtn = document.getElementById('lookupTempBtn');
-const tempLookupResults = document.getElementById('tempLookupResults');
+// DOM Elements - will be initialized in DOMContentLoaded
+let loginModal;
+let authCodeInput;
+let loginBtn;
+let loginError;
+let mainContainer;
+let logoutBtn;
+let personalEmailInput;
+let generateBtn;
+let manualBtn;
+let errorMessage;
+let successMessage;
+let generatedSection;
+let tempEmailDisplay;
+let copyBtn;
+let newEmailBtn;
+let expiryTimer;
+let expiryProgress;
+let manualModal;
+let customEmailInput;
+let createManualBtn;
+let cancelManualBtn;
+let closeManualModal;
+let manualError;
+let refreshActiveBtn;
+let activeEmailsList;
+let tabBtns;
+let tabContents;
+let lookupPersonalInput;
+let lookupPersonalBtn;
+let personalLookupResults;
+let lookupTempInput;
+let lookupTempBtn;
+let tempLookupResults;
 
 // State
 let currentTempEmail = null;
 let currentExpiresAt = null;
 let expiryInterval = null;
 let authToken = localStorage.getItem(STORAGE_KEY);
+
+function initializeDOMReferences() {
+  // DOM Elements - Login
+  loginModal = document.getElementById('loginModal');
+  authCodeInput = document.getElementById('authCode');
+  loginBtn = document.getElementById('loginBtn');
+  loginError = document.getElementById('loginError');
+  mainContainer = document.getElementById('mainContainer');
+  logoutBtn = document.getElementById('logoutBtn');
+
+  // DOM Elements - General
+  personalEmailInput = document.getElementById('personalEmail');
+  generateBtn = document.getElementById('generateBtn');
+  manualBtn = document.getElementById('manualBtn');
+  errorMessage = document.getElementById('errorMessage');
+  successMessage = document.getElementById('successMessage');
+  generatedSection = document.getElementById('generatedSection');
+  tempEmailDisplay = document.getElementById('tempEmailDisplay');
+  copyBtn = document.getElementById('copyBtn');
+  newEmailBtn = document.getElementById('newEmailBtn');
+  expiryTimer = document.getElementById('expiryTimer');
+  expiryProgress = document.getElementById('expiryProgress');
+
+  // DOM Elements - Manual Email Modal
+  manualModal = document.getElementById('manualModal');
+  customEmailInput = document.getElementById('customEmail');
+  createManualBtn = document.getElementById('createManualBtn');
+  cancelManualBtn = document.getElementById('cancelManualBtn');
+  closeManualModal = document.getElementById('closeManualModal');
+  manualError = document.getElementById('manualError');
+
+  // DOM Elements - Active Emails
+  refreshActiveBtn = document.getElementById('refreshActiveBtn');
+  activeEmailsList = document.getElementById('activeEmailsList');
+
+  // Tab elements
+  tabBtns = document.querySelectorAll('.tab-btn');
+  tabContents = document.querySelectorAll('.tab-content');
+
+  // Lookup elements
+  lookupPersonalInput = document.getElementById('lookupPersonal');
+  lookupPersonalBtn = document.getElementById('lookupPersonalBtn');
+  personalLookupResults = document.getElementById('personalLookupResults');
+
+  lookupTempInput = document.getElementById('lookupTemp');
+  lookupTempBtn = document.getElementById('lookupTempBtn');
+  tempLookupResults = document.getElementById('tempLookupResults');
+}
 
 // ==================== INITIALIZATION ====================
 
@@ -616,9 +653,19 @@ function escapeHtml(text) {
 // ==================== INITIALIZATION ON LOAD ====================
 
 window.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM Content Loaded - attaching event listeners');
+  console.log('DOM Content Loaded');
+  
+  // First, initialize all DOM references
+  initializeDOMReferences();
+  console.log('DOM references initialized');
+  
+  // Then attach event listeners
   attachEventListeners();
+  console.log('Event listeners attached');
+  
+  // Then initialize auth
   initializeAuth();
+  console.log('Auth initialized');
 
   // Auto-refresh active emails every 10 seconds
   setInterval(() => {
