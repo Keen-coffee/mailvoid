@@ -1,19 +1,21 @@
 const emailStore = require('../../store');
+const fs = require('fs');
+const path = require('path');
 
-async function fetchRandomWord() {
-  const response = await fetch('https://random-word-api.herokuapp.com/word');
-  const word = await response.text();
-  return word;
+const words = JSON.parse(fs.readFileSync(path.join(__dirname, 'words.json'), 'utf8'));
+
+function randomWord() {
+  return words[Math.floor(Math.random() * words.length)];
 }
 
-export default async function handler(req, res) {
+export default function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const { duration } = req.body;
-  const word1 = await fetchRandomWord();
-  const word2 = await fetchRandomWord();
+  const word1 = randomWord();
+  const word2 = randomWord();
   const digits = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
   const email = `${word1}.${word2}${digits}@mailvoid.win`;
 
