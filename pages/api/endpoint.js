@@ -1,23 +1,37 @@
 const emailStore = require('../../store');
+const { simpleParser } = require('mailparser');
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'PUT') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { to, from, subject, text } = req.body;
+  const { from, to, raw } = req.body;
 
-  if (!emailStore.has(to)) {
-    return res.status(404).json({ error: 'Email address not found' });
+  // Parse the raw email
+  const parsed = await simpleParser(raw);
+  const subject = parsed.subject || 'No Subject';
+  const text = parsed.text || parsed.html || 'No Content';
+
+  // to might be array or string
+  const toAddresses = Array.isArray(to) ? to : [to];
+
+  let processed = false;
+  for (const addr of toAddresses) {
+    if (emailStore.has(addr)) {
+      const entry = emailStore.get(addr);
+      if (entry.expiration && Date.now() > entry.expiration) {
+        emailStore.delete(addr);
+        continue;
+      }
+      entry.emails.push({ from, subject, text, receivedAt: new Date() });
+      processed = true;
+    }
   }
 
-  const entry = emailStore.get(to);
-  if (entry.expiration && Date.now() > entry.expiration) {
-    emailStore.delete(to);
-    return res.status(410).json({ error: 'Email address expired' });
+  if (processed) {
+    res.status(200).json({ success: true });
+  } else {
+    res.status(404).json({ error: 'No valid email addresses found' });
   }
-
-  entry.emails.push({ from, subject, text, receivedAt: new Date() });
-
-  res.status(200).json({ success: true });
 }
