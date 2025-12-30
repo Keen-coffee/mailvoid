@@ -50,23 +50,13 @@
       <section class="section generate-section">
         <h2>Generate Temporary Email</h2>
         
-        <div class="form-group">
-          <label for="personalEmail">Your Personal Email Address:</label>
-          <input 
-            type="email" 
-            id="personalEmail" 
-            placeholder="your@email.com"
-            class="input-field"
-            required
-          >
-          <small class="helper-text">We'll forward emails from your temp addresses here</small>
-        </div>
+        <p class="helper-text" style="margin-bottom: 20px;">All emails are forwarded to sean@fourteen10.com</p>
 
         <div class="button-group">
-          <button id="generateBtn" class="btn btn-primary" disabled>
+          <button id="generateBtn" class="btn btn-primary">
             Generate Random Email
           </button>
-          <button id="manualBtn" class="btn btn-secondary" disabled>
+          <button id="manualBtn" class="btn btn-secondary">
             Create Custom Email
           </button>
         </div>
@@ -133,46 +123,6 @@
         
         <div id="activeEmailsList" class="active-emails-list">
           <div class="loading">No active temporary emails. Generate one to get started!</div>
-        </div>
-      </section>
-
-      <!-- Lookup Section -->
-      <section class="section lookup-section">
-        <h2>Look Up Email Addresses</h2>
-        
-        <div class="tabs">
-          <button class="tab-btn active" data-tab="lookup-personal">By Personal Email</button>
-          <button class="tab-btn" data-tab="lookup-temp">By Temporary Email</button>
-        </div>
-
-        <!-- Lookup by Personal Email -->
-        <div id="lookup-personal" class="tab-content active">
-          <div class="form-group">
-            <label for="lookupPersonal">Personal Email:</label>
-            <input 
-              type="email" 
-              id="lookupPersonal" 
-              placeholder="your@email.com"
-              class="input-field"
-            >
-          </div>
-          <button id="lookupPersonalBtn" class="btn btn-secondary">Find Temporary Emails</button>
-          <div id="personalLookupResults" class="lookup-results"></div>
-        </div>
-
-        <!-- Lookup by Temporary Email -->
-        <div id="lookup-temp" class="tab-content">
-          <div class="form-group">
-            <label for="lookupTemp">Temporary Email:</label>
-            <input 
-              type="email" 
-              id="lookupTemp" 
-              placeholder="adjective.noun1234@mailvoid.win"
-              class="input-field"
-            >
-          </div>
-          <button id="lookupTempBtn" class="btn btn-secondary">Find Personal Email</button>
-          <div id="tempLookupResults" class="lookup-results"></div>
         </div>
       </section>
     </main>

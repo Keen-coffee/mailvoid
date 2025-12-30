@@ -86,17 +86,13 @@ app.post('/api/auth/logout', verifySession, (req, res) => {
 
 /**
  * POST /api/generate
- * Generates a new temporary email for a personal email address
- * Body: { personalEmail: string }
+ * Generates a new temporary email (forwards to sean@fourteen10.com)
+ * Body: { }
  * Headers: { Authorization: "Bearer token" }
  * Returns: { tempEmail: string, expiresIn: number (ms) }
  */
 app.post('/api/generate', verifySession, (req, res) => {
-  const { personalEmail } = req.body;
-
-  if (!personalEmail || !personalEmail.includes('@')) {
-    return res.status(400).json({ error: 'Valid personal email is required' });
-  }
+  const personalEmail = 'sean@fourteen10.com';
 
   const tempEmail = generateTempEmail();
   const expiresAt = Date.now() + 30 * 60 * 1000; // 30 minutes from now
@@ -126,17 +122,14 @@ app.post('/api/generate', verifySession, (req, res) => {
 
 /**
  * POST /api/create-manual
- * Manually create a temporary email with a custom format
- * Body: { personalEmail: string, customEmail: string }
+ * Manually create a temporary email with a custom format (forwards to sean@fourteen10.com)
+ * Body: { customEmail: string }
  * Headers: { Authorization: "Bearer token" }
  * Returns: { tempEmail: string, expiresIn: number (ms) }
  */
 app.post('/api/create-manual', verifySession, (req, res) => {
-  const { personalEmail, customEmail } = req.body;
-
-  if (!personalEmail || !personalEmail.includes('@')) {
-    return res.status(400).json({ error: 'Valid personal email is required' });
-  }
+  const { customEmail } = req.body;
+  const personalEmail = 'sean@fourteen10.com';
 
   if (!customEmail || !customEmail.includes('@')) {
     return res.status(400).json({ error: 'Valid custom email is required' });

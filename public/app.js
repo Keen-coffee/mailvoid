@@ -9,7 +9,6 @@ let loginBtn;
 let loginError;
 let mainContainer;
 let logoutBtn;
-let personalEmailInput;
 let generateBtn;
 let manualBtn;
 let errorMessage;
@@ -28,14 +27,6 @@ let closeManualModal;
 let manualError;
 let refreshActiveBtn;
 let activeEmailsList;
-let tabBtns;
-let tabContents;
-let lookupPersonalInput;
-let lookupPersonalBtn;
-let personalLookupResults;
-let lookupTempInput;
-let lookupTempBtn;
-let tempLookupResults;
 
 // State
 let currentTempEmail = null;
@@ -53,7 +44,6 @@ function initializeDOMReferences() {
   logoutBtn = document.getElementById('logoutBtn');
 
   // DOM Elements - General
-  personalEmailInput = document.getElementById('personalEmail');
   generateBtn = document.getElementById('generateBtn');
   manualBtn = document.getElementById('manualBtn');
   errorMessage = document.getElementById('errorMessage');
@@ -76,19 +66,6 @@ function initializeDOMReferences() {
   // DOM Elements - Active Emails
   refreshActiveBtn = document.getElementById('refreshActiveBtn');
   activeEmailsList = document.getElementById('activeEmailsList');
-
-  // Tab elements
-  tabBtns = document.querySelectorAll('.tab-btn');
-  tabContents = document.querySelectorAll('.tab-content');
-
-  // Lookup elements
-  lookupPersonalInput = document.getElementById('lookupPersonal');
-  lookupPersonalBtn = document.getElementById('lookupPersonalBtn');
-  personalLookupResults = document.getElementById('personalLookupResults');
-
-  lookupTempInput = document.getElementById('lookupTemp');
-  lookupTempBtn = document.getElementById('lookupTempBtn');
-  tempLookupResults = document.getElementById('tempLookupResults');
 }
 
 // ==================== INITIALIZATION ====================
@@ -137,26 +114,6 @@ function attachEventListeners() {
 
   // Active Emails Events
   refreshActiveBtn.addEventListener('click', loadActiveEmails);
-
-  // Tab Switching Events
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tabName = btn.getAttribute('data-tab');
-      switchTab(tabName);
-    });
-  });
-
-  // Lookup Events
-  lookupPersonalBtn.addEventListener('click', lookupByPersonalEmail);
-  lookupTempBtn.addEventListener('click', lookupByTempEmail);
-
-  lookupPersonalInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') lookupByPersonalEmail();
-  });
-
-  lookupTempInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') lookupByTempEmail();
-  });
 }
 
 // ==================== AUTHENTICATION ====================
@@ -234,25 +191,7 @@ function showLoginError(message) {
 
 // ==================== EMAIL GENERATION ====================
 
-function validateEmail() {
-  const email = personalEmailInput.value.trim();
-  const isValid = email.length > 0 && email.includes('@');
-  generateBtn.disabled = !isValid;
-  manualBtn.disabled = !isValid;
-
-  if (isValid) {
-    clearMessages();
-  }
-}
-
 async function generateEmail() {
-  const personalEmail = personalEmailInput.value.trim();
-
-  if (!personalEmail.includes('@')) {
-    showError('Please enter a valid email address');
-    return;
-  }
-
   generateBtn.disabled = true;
   clearMessages();
 
@@ -263,7 +202,7 @@ async function generateEmail() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authToken}`,
       },
-      body: JSON.stringify({ personalEmail }),
+      body: JSON.stringify({}),
     });
 
     const data = await response.json();
@@ -289,13 +228,7 @@ async function generateEmail() {
 }
 
 async function createManualEmail() {
-  const personalEmail = personalEmailInput.value.trim();
   const customEmail = customEmailInput.value.trim();
-
-  if (!personalEmail.includes('@')) {
-    showManualError('Please enter a valid personal email');
-    return;
-  }
 
   if (!customEmail.includes('@')) {
     showManualError('Please enter a valid email address');
@@ -317,7 +250,7 @@ async function createManualEmail() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${authToken}`,
       },
-      body: JSON.stringify({ personalEmail, customEmail }),
+      body: JSON.stringify({ customEmail }),
     });
 
     const data = await response.json();
@@ -502,113 +435,7 @@ async function copyEmail(email) {
 
 // ==================== LOOKUP ====================
 
-async function lookupByPersonalEmail() {
-  const email = lookupPersonalInput.value.trim();
-
-  if (!email.includes('@')) {
-    showError('Please enter a valid email address');
-    return;
-  }
-
-  personalLookupResults.innerHTML = '<div style="text-align: center; color: #999;">Loading...</div>';
-
-  try {
-    const response = await fetch(`${API_BASE}/lookup/personal?email=${encodeURIComponent(email)}`);
-    const data = await response.json();
-
-    if (!response.ok) {
-      showError(data.error || 'Failed to lookup emails');
-      personalLookupResults.innerHTML = '';
-      return;
-    }
-
-    displayLookupResults(data.tempEmails, personalLookupResults);
-  } catch (error) {
-    console.error('Error looking up emails:', error);
-    showError('Failed to lookup emails');
-    personalLookupResults.innerHTML = '';
-  }
-}
-
-async function lookupByTempEmail() {
-  const email = lookupTempInput.value.trim();
-
-  if (!email.includes('@')) {
-    showError('Please enter a valid email address');
-    return;
-  }
-
-  tempLookupResults.innerHTML = '<div style="text-align: center; color: #999;">Loading...</div>';
-
-  try {
-    const response = await fetch(`${API_BASE}/lookup/temp?email=${encodeURIComponent(email)}`);
-    const data = await response.json();
-
-    if (!response.ok) {
-      tempLookupResults.innerHTML = '<div class="no-results">Email not found or expired</div>';
-      return;
-    }
-
-    const resultHTML = `
-      <div class="result-item">
-        <div class="result-label">Personal Email Address</div>
-        <div class="result-value">${escapeHtml(data.personalEmail)}</div>
-      </div>
-    `;
-    tempLookupResults.innerHTML = resultHTML;
-  } catch (error) {
-    console.error('Error looking up email:', error);
-    showError('Failed to lookup email');
-    tempLookupResults.innerHTML = '';
-  }
-}
-
-function displayLookupResults(emails, container) {
-  if (!emails || emails.length === 0) {
-    container.innerHTML = '<div class="no-results">No temporary emails found</div>';
-    return;
-  }
-
-  const resultsHTML = emails.map(email => {
-    const createdAt = new Date(email.createdAt);
-    const expiresAt = new Date(email.expiresAt);
-    const now = Date.now();
-    const isExpired = expiresAt.getTime() <= now;
-
-    return `
-      <div class="result-item ${isExpired ? 'expired' : ''}">
-        <div class="result-label">Temporary Email Address</div>
-        <div class="result-value">${escapeHtml(email.tempEmail)}</div>
-        <div class="result-info">
-          Created: ${createdAt.toLocaleString()}<br>
-          Expires: ${expiresAt.toLocaleString()} ${isExpired ? '(Expired)' : ''}
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  container.innerHTML = resultsHTML;
-}
-
 // ==================== UI HELPERS ====================
-
-function switchTab(tabName) {
-  tabBtns.forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.getAttribute('data-tab') === tabName) {
-      btn.classList.add('active');
-    }
-  });
-
-  tabContents.forEach(content => {
-    content.classList.remove('active');
-    if (content.id === tabName) {
-      content.classList.add('active');
-    }
-  });
-
-  clearMessages();
-}
 
 function showError(message) {
   errorMessage.textContent = message;
