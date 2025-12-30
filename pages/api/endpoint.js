@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     // For now, store the raw email content directly
     // TODO: Add proper MIME parsing later
     const subject = 'Email Received';
-    const text = raw;
+    const text = raw.substring(0, 1000); // Limit to 1000 chars to prevent issues
 
     // to might be array or string
     const toAddresses = Array.isArray(to) ? to : [to];

@@ -18,7 +18,7 @@ export default function handler(req, res) {
       return res.status(410).json({ error: 'Email address expired' });
     }
 
-    res.status(200).json({ emails: entry.emails });
+    res.status(200).json({ emails: entry.emails.slice(-5) });
   } catch (error) {
     console.error('Error in emails API:', error);
     res.status(500).json({ error: 'Internal server error' });
