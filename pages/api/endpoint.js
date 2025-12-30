@@ -7,6 +7,10 @@ export const config = {
 };
 
 export default async function handler(req, res) {
+  console.log('Incoming request to /api/endpoint');
+  console.log('Method:', req.method);
+  console.log('Headers:', JSON.stringify(req.headers, null, 2));
+
   if (req.method !== 'PUT') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -20,6 +24,9 @@ export default async function handler(req, res) {
       req.on('error', reject);
     });
 
+    console.log('Raw body length:', raw.length);
+    console.log('Raw body preview:', raw.substring(0, 200) + '...');
+
     if (!raw) {
       return res.status(400).json({ error: 'Missing raw email content' });
     }
@@ -27,6 +34,9 @@ export default async function handler(req, res) {
     // Get metadata from headers
     const from = req.headers['x-from'];
     const to = JSON.parse(req.headers['x-to'] || '[]');
+
+    console.log('From:', from);
+    console.log('To:', to);
 
     // For now, store the raw email content directly
     // TODO: Add proper MIME parsing later
@@ -39,6 +49,7 @@ export default async function handler(req, res) {
     let processed = false;
     for (const addr of toAddresses) {
       if (addr.endsWith('@mailvoid.win')) {
+        console.log('Processing email for:', addr);
         // For testing, accept any @mailvoid.win email
         if (!emailStore.has(addr)) {
           emailStore.set(addr, { expiration: null, emails: [] });
@@ -48,6 +59,8 @@ export default async function handler(req, res) {
         processed = true;
       }
     }
+
+    console.log('Processed:', processed);
 
     if (processed) {
       res.status(200).json({ success: true });
