@@ -1,5 +1,4 @@
 const emailStore = require('../../store');
-const { simpleParser } = require('mailparser');
 
 export default async function handler(req, res) {
   if (req.method !== 'PUT') {
@@ -13,10 +12,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing raw email content' });
     }
 
-    // Parse the raw email
-    const parsed = await simpleParser(raw);
-    const subject = parsed.subject || 'No Subject';
-    const text = parsed.text || parsed.html || 'No Content';
+    // For now, store the raw email content directly
+    // TODO: Add proper MIME parsing later
+    const subject = 'Email Received';
+    const text = raw;
 
     // to might be array or string
     const toAddresses = Array.isArray(to) ? to : [to];
