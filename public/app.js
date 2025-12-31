@@ -149,6 +149,11 @@ function switchTab(tabName) {
 async function handleLogin() {
   const code = authCodeInput.value.trim();
 
+  if (code.length !== 8) {
+    showLoginError('Please enter an 8-digit code');
+    return;
+  }
+
   loginBtn.disabled = true;
   loginError.classList.remove('show');
 
