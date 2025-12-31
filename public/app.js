@@ -113,6 +113,35 @@ function attachEventListeners() {
 
   // Active Emails Events
   refreshActiveBtn.addEventListener('click', loadActiveEmails);
+
+  // Tab Navigation
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const tabName = item.getAttribute('data-tab');
+      switchTab(tabName);
+    });
+  });
+}
+
+function switchTab(tabName) {
+  // Update active nav item
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    item.classList.remove('active');
+    if (item.getAttribute('data-tab') === tabName) {
+      item.classList.add('active');
+    }
+  });
+
+  // Update active content section
+  const sections = document.querySelectorAll('.content-section');
+  sections.forEach(section => {
+    section.classList.remove('active');
+    if (section.id === tabName) {
+      section.classList.add('active');
+    }
+  });
 }
 
 // ==================== AUTHENTICATION ====================

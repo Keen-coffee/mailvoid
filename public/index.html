@@ -12,15 +12,14 @@
     <div class="modal-content login-modal">
       <div class="login-header">
         <h1>MailVoid</h1>
-        <p class="subtitle">Temporary Email Generator</p>
+        <p class="subtitle">Temporary Email</p>
       </div>
       
       <div class="login-form">
-        <p class="login-instruction">Enter your authentication code to continue</p>
-        
         <input 
           type="password" 
           id="authCode" 
+          placeholder="Enter code"
           class="input-field auth-input"
           maxlength="8"
           inputmode="numeric"
@@ -28,107 +27,126 @@
         
         <div id="loginError" class="error-message"></div>
         
-        <button id="loginBtn" class="btn btn-primary">
-          Login
+        <button id="loginBtn" class="btn btn-primary btn-block">
+          Unlock
         </button>
       </div>
     </div>
   </div>
 
-  <div class="container" id="mainContainer" style="display: none;">
-    <header class="header">
-      <div class="header-top">
+  <div id="mainContainer" class="app-wrapper" style="display: none;">
+    <aside class="sidebar">
+      <div class="logo">
         <h1>MailVoid</h1>
-        <button id="logoutBtn" class="btn btn-logout">Logout</button>
+        <button id="logoutBtn" class="btn-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
       </div>
-      <p class="subtitle">Generate temporary email addresses instantly</p>
-    </header>
+
+      <nav class="nav-section">
+        <button class="nav-item active" data-tab="generate">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"></path>
+          </svg>
+          Generate
+        </button>
+        <button class="nav-item" data-tab="active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+          </svg>
+          Active
+        </button>
+      </nav>
+    </aside>
 
     <main class="main-content">
-      <!-- Generate Email Section -->
-      <section class="section generate-section">
-        <h2>Generate Temporary Email</h2>
+      <!-- Generate Section -->
+      <section id="generate" class="content-section active">
+        <div class="section-header">
+          <h2>Generate Email</h2>
+          <p class="helper-text">Creates forwarded to sean@fourteen10.com</p>
+        </div>
 
-        <div class="button-group">
-          <button id="generateBtn" class="btn btn-primary">
-            Generate Random Email
+        <div class="action-buttons">
+          <button id="generateBtn" class="btn btn-primary btn-large">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"></path>
+            </svg>
+            Random Email
           </button>
-          <button id="manualBtn" class="btn btn-secondary">
-            Create Custom Email
+          <button id="manualBtn" class="btn btn-secondary btn-large">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            Custom Email
           </button>
         </div>
 
         <div id="errorMessage" class="error-message"></div>
         <div id="successMessage" class="success-message"></div>
-      </section>
 
-      <!-- Manual Email Creation Modal -->
-      <div id="manualModal" class="modal" style="display: none;">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2>Create Custom Temporary Email</h2>
-            <button class="close-btn" id="closeManualModal">&times;</button>
-          </div>
-          
-          <div class="form-group">
-            <label for="customEmail">Email Address:</label>
-            <input 
-              type="email" 
-              id="customEmail" 
-              placeholder="myemail@mailvoid.win"
-              class="input-field"
-            >
-            <small class="helper-text">Must end with @mailvoid.win</small>
-          </div>
-
-          <div id="manualError" class="error-message"></div>
-          
-          <div class="modal-buttons">
-            <button id="createManualBtn" class="btn btn-primary">Create Email</button>
-            <button id="cancelManualBtn" class="btn btn-secondary">Cancel</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Generated Email Display -->
-      <section id="generatedSection" class="section generated-section hidden">
-        <h2>Your Temporary Email</h2>
-        
-        <div class="email-display">
-          <div class="email-label">Temporary Email Address:</div>
+        <!-- Generated Email Display -->
+        <div id="generatedSection" class="email-card hidden">
+          <div class="email-header">Your Email</div>
           <div class="email-value" id="tempEmailDisplay"></div>
-          <button id="copyBtn" class="btn btn-secondary">Copy to Clipboard</button>
-        </div>
-
-        <div class="expiry-info">
-          <p>Expires in: <span id="expiryTimer"></span></p>
-          <div id="expiryBar" class="expiry-bar">
-            <div id="expiryProgress" class="expiry-progress"></div>
+          <button id="copyBtn" class="btn btn-sm btn-secondary">Copy</button>
+          
+          <div class="expiry-info">
+            <span id="expiryTimer"></span>
+            <div class="progress-bar">
+              <div id="expiryProgress" class="progress-fill"></div>
+            </div>
           </div>
-        </div>
 
-        <button id="newEmailBtn" class="btn btn-secondary">Generate Another Email</button>
+          <button id="newEmailBtn" class="btn btn-sm btn-secondary btn-block">New Email</button>
+        </div>
       </section>
 
       <!-- Active Emails Section -->
-      <section class="section active-section">
-        <h2>Active Temporary Emails</h2>
-        
-        <button id="refreshActiveBtn" class="btn btn-secondary" style="margin-bottom: 20px;">
-          Refresh List
-        </button>
-        
-        <div id="activeEmailsList" class="active-emails-list">
-          <div class="loading">No active temporary emails. Generate one to get started!</div>
+      <section id="active" class="content-section">
+        <div class="section-header">
+          <h2>Active Emails</h2>
+          <button id="refreshActiveBtn" class="btn-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6"></path>
+              <path d="M1 20v-6h6"></path>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36M20.49 15a9 9 0 0 1-14.85 3.36"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div id="activeEmailsList" class="emails-grid">
+          <div class="empty-state">No active emails</div>
         </div>
       </section>
     </main>
-
-    <footer class="footer">
-      <p>&copy; 2025 MailVoid. All temporary emails are automatically deleted after 30 minutes.</p>
-    </footer>
   </div>
 
-  <script src="app.js"></script>
-</body>
-</html>
+  <!-- Manual Email Modal -->
+  <div id="manualModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Custom Email</h2>
+        <button class="close-btn" id="closeManualModal">&times;</button>
+      </div>
+      
+      <input 
+        type="email" 
+        id="customEmail" 
+        placeholder="myemail@mailvoid.win"
+        class="input-field"
+      >
+      <small class="helper-text">Must end with @mailvoid.win</small>
+
+      <div id="manualError" class="error-message"></div>
+      
+      <div class="modal-buttons">
+        <button id="createManualBtn" class="btn btn-primary btn-block">Create</button>
+        <button id="cancelManualBtn" class="btn btn-secondary btn-block">Cancel</button>
+      </div>
+    </div>
