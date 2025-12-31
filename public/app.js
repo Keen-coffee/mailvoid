@@ -83,7 +83,13 @@ function initializeAuth() {
 
 function attachEventListeners() {
   // Auth Events
-  loginBtn.addEventListener('click', handleLogin);
+  console.log('Attaching event listeners. loginBtn:', loginBtn);
+  if (loginBtn) {
+    loginBtn.addEventListener('click', handleLogin);
+    console.log('Login button listener attached');
+  } else {
+    console.error('loginBtn is null!');
+  }
   authCodeInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleLogin();
   });
@@ -147,9 +153,12 @@ function switchTab(tabName) {
 // ==================== AUTHENTICATION ====================
 
 async function handleLogin() {
+  console.log('handleLogin called');
   const code = authCodeInput.value.trim();
+  console.log('Code entered:', code, 'Length:', code.length);
 
   if (code.length !== 8) {
+    console.log('Code length validation failed');
     showLoginError('Please enter an 8-digit code');
     return;
   }
@@ -158,6 +167,7 @@ async function handleLogin() {
   loginError.classList.remove('show');
 
   try {
+    console.log('Sending login request...');
     const response = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -165,6 +175,7 @@ async function handleLogin() {
     });
 
     const data = await response.json();
+    console.log('Response:', response.ok, data);
 
     if (!response.ok) {
       showLoginError(data.error || 'Invalid code');
@@ -174,6 +185,7 @@ async function handleLogin() {
 
     authToken = data.token;
     localStorage.setItem(STORAGE_KEY, authToken);
+    console.log('Login successful, token:', authToken);
     showMainApp();
   } catch (error) {
     console.error('Login error:', error);
