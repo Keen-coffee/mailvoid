@@ -1,4 +1,5 @@
 // API Base URL
+console.log('app.js loaded');
 const API_BASE = '/api';
 const STORAGE_KEY = 'mailvoid_token';
 
